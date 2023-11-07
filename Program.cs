@@ -1,4 +1,10 @@
+using MatchReservationSystem.DbContexts;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddDbContext<GlobalDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("GlobalDbContextConnection") ?? throw new InvalidOperationException("Connection string 'GlobalDbContext' not found.")));
+
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -18,6 +24,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(

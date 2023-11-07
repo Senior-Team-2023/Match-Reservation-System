@@ -1,0 +1,60 @@
+﻿@model MatchReservationSystem.Models.Match
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Match</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.HomeTeam)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.HomeTeam.Name)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.AwayTeam)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.AwayTeam.Name)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.MatchVenue)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.MatchVenue.Name)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Date)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Date)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.MainReferee)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.MainReferee.Name)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.LineManOne)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.LineManOne.Name)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.LineManTwo)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.LineManTwo.Name)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

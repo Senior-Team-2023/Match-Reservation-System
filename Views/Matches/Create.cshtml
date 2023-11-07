@@ -1,0 +1,72 @@
+﻿@model MatchReservationSystem.Models.Match
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Match</h4>
+<hr />
+<div class="row">
+    <div class="col-md-12">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="row">
+                <div class="form-group col-md-4">
+                    <label asp-for="Date" class="control-label"></label>
+                    <input asp-for="Date" class="form-control" />
+                    <span asp-validation-for="Date" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-4">
+                    <label asp-for="MatchVenueId" class="control-label"></label>
+                    <select asp-for="MatchVenueId" class="form-select" asp-items="ViewBag.MatchVenues"></select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-4">
+                    <label asp-for="HomeTeamId" class="control-label"></label>
+                    <select id="HomeTeamId" asp-for="HomeTeamId" class="form-select" onchange="loadTeamsDDL('HomeTeamId','AwayTeamId')" asp-items="ViewBag.HomeTeams">
+                    </select>
+                </div>
+                <div class="form-group col-md-4">
+                    <label asp-for="AwayTeamId" class="control-label"></label>
+                    <select id="AwayTeamId" asp-for="AwayTeamId" class="form-select" onchange="loadTeamsDDL('AwayTeamId','HomeTeamId')" asp-items="ViewBag.AwayTeams"></select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-4">
+                    <label asp-for="MainRefereeId" class="control-label"></label>
+                    <select asp-for="MainRefereeId" class="form-select" asp-items="ViewBag.MainReferees" ></select>
+                    <span asp-validation-for="MainRefereeId" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-4">
+                    <label asp-for="LineManOneId" class="control-label"></label>
+                    <select id="LineMan1" asp-for="LineManOneId" class="form-select" asp-items="ViewBag.LineMen" onchange="loadLineMenDDL('LineMan1','LineMan2')"></select>
+                    <span asp-validation-for="LineManOneId" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-4">
+                    <label asp-for="LineManTwoId" class="control-label"></label>
+                    <select id="LineMan2" asp-for="LineManTwoId" class="form-select" asp-items="ViewBag.LineMen" onchange="loadLineMenDDL('LineMan2','LineMan1')"></select>
+                    <span asp-validation-for="LineManTwoId" class="text-danger"></span>
+                </div>
+            </div>
+            <br />
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        <script src="~/lib/match-selection.js"></script>
+    }
+}
