@@ -1,6 +1,4 @@
-﻿using MatchReservationSystem.Common;
-using System.ComponentModel.DataAnnotations;
-
+﻿
 namespace MatchReservationSystem.Models
 {
     public class Match

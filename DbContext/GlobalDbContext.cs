@@ -1,7 +1,7 @@
 ﻿using MatchReservationSystem.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace MatchReservationSystem.DbContexts
+namespace MarkReservationSystem.DbContexts
 {
     public class GlobalDbContext : DbContext
     {

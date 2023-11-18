@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
-namespace MatchReservationSystem.Controllers
+namespace MarkReservationSystem.Controllers
 {
     public class HomeController : Controller
     {
