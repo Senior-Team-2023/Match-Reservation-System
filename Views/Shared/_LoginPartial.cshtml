@@ -7,9 +7,15 @@
     @if (SignInManager.IsSignedIn(User))
     {
 
-        @if (User.Identity?.Name! == "admin")
+        
+        @if (User.IsInRole("Manager"))
         {
-
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-controller="MatchVenue" asp-action="Index">Stadiums</a>
+            </li>
+        }
+        @if (User.IsInRole("Admin"))
+        {
             <li class="nav-item">
                 <a class="nav-link text-dark" asp-controller="Users" asp-action="Index">Users</a>
             </li>
