@@ -6,14 +6,6 @@
 <ul class="navbar-nav">
     @if (SignInManager.IsSignedIn(User))
     {
-
-        
-        @if (User.IsInRole("Manager"))
-        {
-            <li class="nav-item">
-                <a class="nav-link text-dark" asp-controller="MatchVenue" asp-action="Index">Stadiums</a>
-            </li>
-        }
         @if (User.IsInRole("Admin"))
         {
             <li class="nav-item">

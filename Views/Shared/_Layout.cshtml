@@ -25,6 +25,10 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Matches" asp-action="Index">Matches</a>
                         </li>
+                        @if (User.IsInRole("Manager"))
+                        {
+                            <a class="nav-link text-dark" asp-controller="MatchVenue" asp-action="Index">Stadiums</a>
+                        }
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>
@@ -43,6 +47,7 @@
     </div>
     </footer>*@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootbox.js/bootbox.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
