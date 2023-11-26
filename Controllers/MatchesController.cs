@@ -40,6 +40,7 @@ namespace MatchReservationSystem.Controllers
             return View(match);
         }
 
+        [Authorize(Roles = "Manager")]
         // GET: Matches/Create
         public async Task<IActionResult> Create()
         {
@@ -48,6 +49,7 @@ namespace MatchReservationSystem.Controllers
         }
         // POST: Matches/Create
         [HttpPost]
+        [Authorize(Roles = "Manager")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("HomeTeamId,AwayTeamId,MatchVenueId,Date,MainRefereeId,LineManOneId,LineManTwoId")] Match match)
         {
@@ -62,6 +64,7 @@ namespace MatchReservationSystem.Controllers
         }
 
         // GET: Matches/Edit/5
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> Edit(int? id)
         {
             var match = await MatchOps.GetRecursiveAsync((int)id);
@@ -75,6 +78,7 @@ namespace MatchReservationSystem.Controllers
 
         // POST: Matches/Edit/5
         [HttpPost]
+        [Authorize(Roles = "Manager")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,HomeTeamId,AwayTeamId,MatchVenueId,Date,MainRefereeId,LineManOneId,LineManTwoId")] Match match)
         {
@@ -108,6 +112,7 @@ namespace MatchReservationSystem.Controllers
         }
 
         // GET: Matches/Delete/5
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> Delete(int? id)
         {
             var match = await MatchOps.GetRecursiveAsync((int)id);
@@ -119,6 +124,7 @@ namespace MatchReservationSystem.Controllers
         }
 
         // POST: Matches/Delete/5
+        [Authorize(Roles = "Manager")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
