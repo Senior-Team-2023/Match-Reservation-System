@@ -9,11 +9,11 @@ namespace MatchReservationSystem.Models
         public string Name { get; set; }
         public City City { get; set; }
 
-        [Display(Name = "Width (Seats in each row)")]
-        public int Width { get; set; }
+        [Display(Name = "Capacity")]
+        public int NumberOfSeats { get; set; }
 
 
-        [Display(Name = "Height (Rows)")]
-        public int Height { get; set; }
+        [Display(Name = "Shape (In Meter Square)")]
+        public int ShapeInMeterSquare { get; set; }
     }
 }
