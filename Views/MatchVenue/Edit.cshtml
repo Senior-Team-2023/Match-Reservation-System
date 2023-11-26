@@ -1,0 +1,57 @@
+﻿@using MatchReservationSystem.Common;
+@model MatchReservationSystem.Models.MatchVenue
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Stadium</h4>
+<hr />
+<div class="row">
+    <div class="col-md-12">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="row">
+                <div class="form-group col-md-4">
+                    <label asp-for="Name" class="control-label"></label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-4">
+                    <label asp-for="City" class="control-label"></label>
+                    <select asp-for="City" class="form-select" aria-required="true" asp-items="Html.GetEnumSelectList<City>()"> </select>
+                    <span asp-validation-for="City" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-4">
+                    <label asp-for="NumberOfSeats" class="control-label"></label>
+                    <input type="number" asp-for="NumberOfSeats" class="form-control" min="100" max="100000" />
+                    <span asp-validation-for="NumberOfSeats" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-4">
+                    <label asp-for="ShapeInMeterSquare" class="control-label"></label>
+                    <input type="number" asp-for="ShapeInMeterSquare" class="form-control" min="100" max="100000" />
+                    <span asp-validation-for="ShapeInMeterSquare" class="text-danger"></span>
+                </div>
+            </div>
+            <br />
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

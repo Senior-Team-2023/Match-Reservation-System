@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MarkReservationSystem.Controllers
 {
-    [Authorize(Roles = "Manager")]
+    [Authorize(Roles = "Admin")]
     public class UsersController : Controller
     {
         private readonly RoleManager<IdentityRole> _roleManager;
@@ -41,7 +41,59 @@ namespace MarkReservationSystem.Controllers
             }
 
             return View(userViewModels);
+        }
 
+        public async Task<IActionResult> ManageRoles(string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var roles = await _roleManager.Roles.ToListAsync();
+
+            var userRolesViewModel = new UserRolesViewModel
+            {
+                UserId = user.Id,
+                UserName = user.UserName,
+                Roles = roles.Select(r => new RoleViewModel
+                {
+                    RoleId = r.Id,
+                    RoleName = r.Name,
+                    IsSelected = _userManager.IsInRoleAsync(user, r.Name).Result
+                }).ToList()
+            };
+
+            ViewBag.Roles = _roleManager.Roles.ToList();
+
+            return View(userRolesViewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ManageRoles(UserRolesViewModel model)
+        {
+            var user = await _userManager.FindByIdAsync(model.UserId);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var userRoles = await _userManager.GetRolesAsync(user);
+
+            foreach (var role in model.Roles)
+            {
+                if (userRoles.Contains(role.RoleName) && !role.IsSelected)
+                {
+                    await _userManager.RemoveFromRoleAsync(user, role.RoleName);
+                }
+                else if (!userRoles.Contains(role.RoleName) && role.IsSelected)
+                {
+                    await _userManager.AddToRoleAsync(user, role.RoleName);
+                }   
+            }
+            return RedirectToAction(nameof(Index));
         }
     }
 }
