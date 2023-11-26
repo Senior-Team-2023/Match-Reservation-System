@@ -11,9 +11,10 @@ builder.Services.AddDbContext<GlobalDbContext>(options =>
 builder.Services.AddDbContext<UserIdentityDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("UserIdentityContextConnection") ?? throw new InvalidOperationException("Connection string 'UserIdentityContext' not found.")));
 
-builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
-    .AddRoles<IdentityRole>()
-    .AddEntityFrameworkStores<UserIdentityDbContext>();
+builder.Services.AddIdentity<ApplicationUser,IdentityRole>()
+    .AddEntityFrameworkStores<UserIdentityDbContext>()
+    .AddDefaultUI()
+    .AddDefaultTokenProviders();
 
 builder.Services.AddControllersWithViews();
 
@@ -36,6 +37,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(

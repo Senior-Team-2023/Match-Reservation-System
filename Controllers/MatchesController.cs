@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using MatchReservationSystem.Models;
 using MatchReservationSystem.Ops;
 using MarkReservationSystem.DbContexts;
+using Microsoft.AspNetCore.Authorization;
+using System.Data;
 
 namespace MatchReservationSystem.Controllers
 {
