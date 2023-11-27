@@ -67,24 +67,56 @@ namespace MarkReservationSystem.Controllers
             await SetViewBagItems(matchId, matchVenueId,width, height);    
             return View();
         }
+      
         private async Task SetViewBagItems(int matchId, int matchVenueId, int width, int height)
         {
-            //ViewBag.ApplicationUserId = new SelectList([[1,"n"]],"Id", "Name");
-            //ViewBag.MatchId = new SelectList(await MatchOps.GetAllAsync(), "Id", "Name");
-            //ViewBag.MatchVenueId = new SelectList(await MatchVenueOps.GetAllAsync(), "Id", "Name");
-            //get width and height of match venue
-            //write only positions from 0 to widthxheight that are not reserved for match and match venue
-            
-            List<int> positions = new List<int>();
+
             List<Reservation> reservedSeats = await ReservationOps.GetMatchReservations(matchId, matchVenueId);
+            List<int> availablePositions = new List<int>();
+            List<int> reservedPositions = new List<int>();
+            List<bool> reservedPositionsBool = new List<bool>();
+            List<string> seatColors = new List<string>();
+
             for (int i = 0; i < width * height; i++)
             {
                 if (!reservedSeats.Any(r => r.SeatPosition == i))
                 {
-                    positions.Add(i);
+                    // Add seat to available seats
+                    availablePositions.Add(i);
+                    // Set seat to not reserved
+                    reservedPositionsBool.Add(false);
+                    // Set seat color to gray
+                    seatColors.Add("gray");
+
+                }
+                else
+                {
+                    // Add seat to reserved seats
+                    reservedPositions.Add(i);
+                    // Set seat to reserved
+                    reservedPositionsBool.Add(true);
+                    // Set seat color to red
+                    seatColors.Add("red");
                 }
             }
-            ViewBag.SeatPositions = new SelectList(positions);
+            // Create 2D list of seats
+            List<List<int>> seats2D = new List<List<int>>();
+            for (int i = 0; i < height; i++)
+            {
+                List<int> row = new List<int>();
+                for (int j = 0; j < width; j++)
+                {
+                    row.Add(i * width + j);
+                }
+                seats2D.Add(row);
+            }
+            ViewBag.SeatPositions = new SelectList(availablePositions);
+            ViewBag.SeatColors = seatColors;
+            ViewBag.ReservedPositions = reservedPositions;
+            ViewBag.ReservedPositionsBool = reservedPositionsBool;
+            ViewBag.Seats2D = seats2D;
+            ViewBag.venueWidth = width;
+            ViewBag.venueHeight = height;
             ViewBag.matchId = matchId;
             ViewBag.matchVenueId = matchVenueId;
         }
