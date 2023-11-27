@@ -134,6 +134,7 @@ namespace MarkReservationSystem.Controllers
                 await ReservationOps.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
             var match = await MatchOps.GetRecursiveAsync((int)reservation.MatchId);
          
             int matchVenueId = match.MatchVenue.Id;

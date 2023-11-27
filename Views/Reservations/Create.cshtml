@@ -40,7 +40,7 @@
                     <div>
                         @for (int j = 0; j < ViewBag.venueWidth; j++)
                         {
-                            <div class="btn btn-primary grid-btn @(@ViewBag.ReservedPositionsBool[ViewBag.Seats2D[i][j]]? "grid-btn-rsrv" : "")">
+                                    <div id="seat-@ViewBag.Seats2D[i][j]" class="btn btn-primary grid-btn @(@ViewBag.ReservedPositionsBool[ViewBag.Seats2D[i][j]]? "grid-btn-rsrv" : "")">
                                     @ViewBag.Seats2D[i][j]
 							</div>
 					    }
@@ -59,7 +59,7 @@
                 <span asp-validation-for="ReservationDate" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input id="sendButton" type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
     </div>
@@ -69,7 +69,8 @@
     <a asp-action="Index">Back to List</a>
 </div>
 
-
+<script src="~/js/signalr/dist/browser/signalr.js"></script>
+<script src="~/js/reservation.js"></script>
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

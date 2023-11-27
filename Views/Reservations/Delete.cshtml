@@ -32,7 +32,7 @@
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.SeatPosition)
         </dt>
-        <dd class = "col-sm-10">
+        <dd id="seatPos" class = "col-sm-10">
             @Html.DisplayFor(model => model.SeatPosition)
         </dd>
         <dt class = "col-sm-2">
@@ -45,7 +45,9 @@
     
     <form asp-action="Delete">
         <input type="hidden" asp-for="Id" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
+        <input id="deleteButton" type="submit" value="Delete" class="btn btn-danger" /> |
         <a asp-action="Index">Back to List</a>
     </form>
 </div>
+<script src="~/js/signalr/dist/browser/signalr.js"></script>
+<script src="~/js/reservation.js"></script>

@@ -2,6 +2,7 @@ using MarkReservationSystem.DbContexts;
 using MarkReservationSystem.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using MarkReservationSystem.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +18,7 @@ builder.Services.AddIdentity<ApplicationUser,IdentityRole>()
     .AddDefaultTokenProviders();
 
 builder.Services.AddControllersWithViews();
+builder.Services.AddSignalR();
 
 var app = builder.Build();
 
@@ -44,5 +46,5 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Matches}/{action=Index}/{id?}");
 app.MapRazorPages();
-
+app.MapHub<ReservationHub>("/reservationHub");
 app.Run();
