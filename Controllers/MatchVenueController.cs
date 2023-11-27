@@ -42,7 +42,7 @@ namespace MatchReservationSystem.Controllers
         // POST: Matches/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,City,NumberOfSeats,ShapeInMeterSquare")] MatchVenue match)
+        public async Task<IActionResult> Create([Bind("Name,City,Height,Width")] MatchVenue match)
         {
             if (ModelState.IsValid)
             {
@@ -69,7 +69,7 @@ namespace MatchReservationSystem.Controllers
         // POST: Matches/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,City,NumberOfSeats,ShapeInMeterSquare")] MatchVenue match)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,City,Height,Width")] MatchVenue match)
         {
             if (id != match.Id)
             {

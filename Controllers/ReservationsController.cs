@@ -62,8 +62,8 @@ namespace MarkReservationSystem.Controllers
             }
             int matchId = match.Id;
             int matchVenueId = match.MatchVenue.Id;
-            int width = match.MatchVenue.ShapeInMeterSquare;
-            int height = match.MatchVenue.NumberOfSeats;
+            int width = match.MatchVenue.Width;
+            int height = match.MatchVenue.Height;
             await SetViewBagItems(matchId, matchVenueId,width, height);    
             return View();
         }
@@ -138,8 +138,8 @@ namespace MarkReservationSystem.Controllers
             var match = await MatchOps.GetRecursiveAsync((int)reservation.MatchId);
          
             int matchVenueId = match.MatchVenue.Id;
-            int width = match.MatchVenue.ShapeInMeterSquare;
-            int height = match.MatchVenue.NumberOfSeats;
+            int width = match.MatchVenue.Width;
+            int height = match.MatchVenue.Height;
             await SetViewBagItems((int)reservation.MatchId, matchVenueId, width, height);
             return View(reservation);
         }
