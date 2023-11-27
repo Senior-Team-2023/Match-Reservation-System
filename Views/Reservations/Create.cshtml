@@ -38,7 +38,7 @@
                     <div>
                         @for (int j = 0; j < ViewBag.venueWidth; j++)
                         {
-                            <div class="btn btn-primary" style="width: 50px; height: 50px; margin: 5px; padding: 0px; display: inline-block; text-align: center; vertical-align: middle; line-height: 50px; background-color: @ViewBag.SeatColors[ViewBag.Seats2D[i][j]]; color: white; border: 1px solid black; border-radius: 5px;">
+                            <div class="btn btn-primary grid-btn" style="background-color: @ViewBag.SeatColors[ViewBag.Seats2D[i][j]]">
                                     @ViewBag.Seats2D[i][j]
 							</div>
 					    }
