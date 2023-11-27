@@ -10,4 +10,10 @@
     color: white;
     border: 1px solid black;
     border-radius: 5px;
+    background-color: gray;
+}
+.grid-btn-selected{
+    background-color: #258cfb;
+}.grid-btn-rsrv{
+    background-color: red !important;
 }
