@@ -1,5 +1,6 @@
 ﻿using MatchReservationSystem.Models;
 using Microsoft.EntityFrameworkCore;
+using MarkReservationSystem.Models;
 
 namespace MarkReservationSystem.DbContexts
 {
@@ -10,5 +11,6 @@ namespace MarkReservationSystem.DbContexts
         public DbSet<Team> Teams { get; set; }
         public DbSet<MatchVenue> MatchVenues { get; set; }
         public DbSet<Referee> Referees { get; set; }
+        public DbSet<MarkReservationSystem.Models.Reservation> Reservation { get; set; } = default!;
     }
 }

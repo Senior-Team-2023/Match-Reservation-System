@@ -1,0 +1,60 @@
+﻿@model MarkReservationSystem.Models.Reservation
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Reservation</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <d@* iv class="form-group">
+                <label asp-for="ApplicationUserId" class="control-label"></label>
+                <select asp-for="ApplicationUserId" class ="form-control" asp-items="ViewBag.ApplicationUserId"></select>
+            </div> *@
+            <@* div class="form-group">
+                <label asp-for="MatchId" class="control-label"></label>
+                <select asp-for="MatchId" class ="form-control" asp-items="ViewBag.MatchId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="MatchVenueId" class="control-label"></label>
+                <select asp-for="MatchVenueId" class ="form-control" asp-items="ViewBag.MatchVenueId"></select>
+            </div> *@
+             <div class="form-group">
+                <input asp-for="MatchId" class="form-control" type="hidden" value="@ViewBag.MatchId"/>
+            </div>
+            <div class="form-group">
+                <input asp-for="MatchVenueId" class="form-control" type="hidden" value="@ViewBag.MatchVenueId"/>
+            </div>
+            <div class="form-group">
+                <label asp-for="SeatPosition" class="control-label"></label>
+                <select asp-for="SeatPosition" class ="form-control" asp-items="ViewBag.SeatPositions"></select>
+            </div>
+           @*  <div class="form-group">
+                <label asp-for="SeatPosition" class="control-label"></label>
+                <input asp-for="SeatPosition" class="form-control" />
+                <span asp-validation-for="SeatPosition" class="text-danger"></span>
+            </div> *@
+            <div class="form-group">
+                <label asp-for="ReservationDate" class="control-label"></label>
+                <input asp-for="ReservationDate" class="form-control" />
+                <span asp-validation-for="ReservationDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
