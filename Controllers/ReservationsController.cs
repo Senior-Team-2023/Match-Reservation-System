@@ -128,10 +128,12 @@ namespace MarkReservationSystem.Controllers
         [Authorize(Roles = "Fan,Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("MatchId,MatchVenueId,SeatPosition,ReservationDate")] Reservation reservation)
+        public async Task<IActionResult> Create([Bind("MatchId,MatchVenueId,SeatPosition")] Reservation reservation)
         {
             if (ModelState.IsValid)
             {
+                DateTime now = DateTime.Now;
+                reservation.ReservationDate = now;
                 ReservationOps.Create(reservation);
                 await ReservationOps.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
