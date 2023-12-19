@@ -25,13 +25,13 @@ namespace MarkReservationSystem.Controllers
             MatchVenueOps = new MatchVenueOps(context);
             ReservationOps = new ReservationOps(context);
         }
-        [Authorize(Roles = "Manager")]
+        [Authorize(Roles = "Manager,Admin")]
         // GET: Reservations
         public async Task<IActionResult> Index()
         {
             return View(await ReservationOps.GetAllRecursiveAsync());
         }
-        [Authorize(Roles = "Manager")]
+        [Authorize(Roles = "Manager,Admin")]
         // GET: Reservations/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -48,8 +48,7 @@ namespace MarkReservationSystem.Controllers
 
             return View(reservation);
         }
-        [Authorize(Roles = "Fan")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,Fan,Manager")]
         // GET: Reservations/Create/Id
         public async Task<IActionResult> Create(int? Id)
         {
@@ -126,8 +125,7 @@ namespace MarkReservationSystem.Controllers
         // POST: Reservations/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [Authorize(Roles = "Fan")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Fan,Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("MatchId,MatchVenueId,SeatPosition,ReservationDate")] Reservation reservation)
@@ -205,8 +203,7 @@ namespace MarkReservationSystem.Controllers
             //ViewData["ApplicationUserId"] = new SelectList(_context.Set<ApplicationUser>(), "Id", "Id", reservation.ApplicationUserId);
             return View(reservation);
         }
-        [Authorize(Roles = "Fan")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Fan,Admin")]
         // GET: Reservations/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -226,8 +223,7 @@ namespace MarkReservationSystem.Controllers
         }
 
         // POST: Reservations/Delete/5
-        [Authorize(Roles = "Fan")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Fan,Admin")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
