@@ -133,6 +133,16 @@ namespace MarkReservationSystem.Controllers
             if (ModelState.IsValid)
             {
                 DateTime now = DateTime.Now;
+                var reservedMatch = await MatchOps.GetRecursiveAsync((int)reservation.MatchId);
+                DateTime matchDate = reservedMatch.Date;
+                DateTime nowPlus3Days = now.AddDays(3);
+                //Console.WriteLine("nowPlus3Days: " + nowPlus3Days.ToString("yyyy-MM-dd"));
+                //Console.WriteLine("matchDate: " + matchDate.ToString("yyyy-MM-dd"));
+
+                if (nowPlus3Days > matchDate)
+                {
+                    return BadRequest("Reservation cannot be made because the match date is within the next 3 days.");
+                }
                 reservation.ReservationDate = now;
                 ReservationOps.Create(reservation);
                 await ReservationOps.SaveChangesAsync();
