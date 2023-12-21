@@ -1,4 +1,4 @@
-﻿@model MarkReservationSystem.Models.Reservation
+﻿@model MatchReservationSystem.Models.Reservation
 
 @{
     ViewData["Title"] = "Create";
@@ -12,65 +12,70 @@
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <d@* iv class="form-group">
-                <label asp-for="ApplicationUserId" class="control-label"></label>
-                <select asp-for="ApplicationUserId" class ="form-control" asp-items="ViewBag.ApplicationUserId"></select>
-            </div> *@
-            <@* div class="form-group">
-                <label asp-for="MatchId" class="control-label"></label>
-                <select asp-for="MatchId" class ="form-control" asp-items="ViewBag.MatchId"></select>
+            @*<d iv class="form-group">
+            <label asp-for="ApplicationUserId" class="control-label"></label>
+            <select asp-for="ApplicationUserId" class ="form-control" asp-items="ViewBag.ApplicationUserId"></select>
             </div>
             <div class="form-group">
-                <label asp-for="MatchVenueId" class="control-label"></label>
-                <select asp-for="MatchVenueId" class ="form-control" asp-items="ViewBag.MatchVenueId"></select>
-            </div> *@
-             <div class="form-group">
-                <input asp-for="MatchId" class="form-control" type="hidden" value="@ViewBag.MatchId"/>
+            <label asp-for="MatchId" class="control-label"></label>
+            <select asp-for="MatchId" class ="form-control" asp-items="ViewBag.MatchId"></select>
             </div>
             <div class="form-group">
-                <input asp-for="MatchVenueId" class="form-control" type="hidden" value="@ViewBag.MatchVenueId"/>
+            <label asp-for="MatchVenueId" class="control-label"></label>
+            <select asp-for="MatchVenueId" class ="form-control" asp-items="ViewBag.MatchVenueId"></select>
+            </div> *@
+            <div class="form-group">
+                <input asp-for="MatchId" class="form-control" type="hidden" value="@ViewBag.MatchId" />
+            </div>
+            <div class="form-group">
+                <input asp-for="MatchVenueId" class="form-control" type="hidden" value="@ViewBag.MatchVenueId" />
             </div><div class="form-group">
-                <input id="SeatPosInput" asp-for="SeatPosition" class="form-control" type="hidden" value=""/>
+                <input id="SeatPosInput" asp-for="SeatPosition" class="form-control" type="hidden" value="" />
             </div>
             <div class="form-group">
                 <label asp-for="SeatPosition" class="control-label"></label>
                 @* <select asp-for="SeatPosition" class ="form-control" asp-items="ViewBag.SeatPositions"></select> *@
                 @for (int i = 0; i < ViewBag.venueHeight; i++)
-				{
+                {
                     <div>
                         @for (int j = 0; j < ViewBag.venueWidth; j++)
                         {
-                                    <div id="seat-@ViewBag.Seats2D[i][j]" class="btn btn-primary grid-btn @(@ViewBag.ReservedPositionsBool[ViewBag.Seats2D[i][j]]? "grid-btn-rsrv" : "")">
-                                    @ViewBag.Seats2D[i][j]
-							</div>
-					    }
-						<br />
+                            <div id="seat-@ViewBag.Seats2D[i][j]" class="btn btn-primary grid-btn @(@ViewBag.ReservedPositionsBool[ViewBag.Seats2D[i][j]]? "grid-btn-rsrv" : "")">
+                                @ViewBag.Seats2D[i][j]
+                            </div>
+                        }
+                        <br />
                     </div>
-				}
+                }
             </div>
-           @*  <div class="form-group">
-                <label asp-for="SeatPosition" class="control-label"></label>
-                <input asp-for="SeatPosition" class="form-control" />
-                <span asp-validation-for="SeatPosition" class="text-danger"></span>
+            @*  <div class="form-group">
+            <label asp-for="SeatPosition" class="control-label"></label>
+            <input asp-for="SeatPosition" class="form-control" />
+            <span asp-validation-for="SeatPosition" class="text-danger"></span>
             </div> *@
-          @*   <div class="form-group">
-                <label asp-for="ReservationDate" class="control-label"></label>
-                <input asp-for="ReservationDate" class="form-control" />
-                <span asp-validation-for="ReservationDate" class="text-danger"></span>
+            @*   <div class="form-group">
+            <label asp-for="ReservationDate" class="control-label"></label>
+            <input asp-for="ReservationDate" class="form-control" />
+            <span asp-validation-for="ReservationDate" class="text-danger"></span>
             </div> *@
-            <div class="form-group">
-                <input id="sendButton" type="submit" value="Create" class="btn btn-primary" />
-            </div>
+            @if (User.IsInRole("Fan"))
+            {
+                <div class="form-group">
+                    <input id="sendButton" type="submit" value="Create" class="btn btn-primary" />
+                </div>
+            }
         </form>
     </div>
 </div>
-
+@*
 <div>
     <a asp-action="Index">Back to List</a>
-</div>
+</div>*@
 
 <script src="~/js/signalr/dist/browser/signalr.js"></script>
 <script src="~/js/reservation.js"></script>
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

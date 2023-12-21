@@ -1,37 +1,35 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using MarkReservationSystem.DbContexts;
-using MarkReservationSystem.Models;
-using MatchReservationSystem.Ops;
+using MatchReservationSystem.DbContexts;
 using MatchReservationSystem.Models;
+using MatchReservationSystem.Ops;
 using Microsoft.AspNetCore.Authorization;
+using MatchReservationSystem.Utilities;
 
-namespace MarkReservationSystem.Controllers
+namespace MatchReservationSystem.Controllers
 {
     public class ReservationsController : Controller
     {
         private readonly MatchOps MatchOps;
         private readonly MatchVenueOps MatchVenueOps;
         private readonly ReservationOps ReservationOps;
+        private readonly HttpContextUserManager HttpContextUserManager;
 
-        public ReservationsController(GlobalDbContext context)
+        public ReservationsController(GlobalDbContext context, HttpContextUserManager httpContextUserManager)
         {
             MatchOps = new MatchOps(context);
             MatchVenueOps = new MatchVenueOps(context);
             ReservationOps = new ReservationOps(context);
+            HttpContextUserManager = httpContextUserManager;
         }
-        [Authorize(Roles = "Manager,Admin")]
+        [Authorize(Roles = "Fan")]
         // GET: Reservations
         public async Task<IActionResult> Index()
         {
-            return View(await ReservationOps.GetAllRecursiveAsync());
+            var userId = HttpContextUserManager.GetUserId();
+            return View(await ReservationOps.GetAllRecursiveAsync(userId));
         }
-        [Authorize(Roles = "Manager,Admin")]
+        [Authorize(Roles = "Fan,Manager")]
         // GET: Reservations/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -40,7 +38,7 @@ namespace MarkReservationSystem.Controllers
                 return NotFound();
             }
 
-            var reservation = await ReservationOps.GetbyIdAsync((int)id);
+            var reservation = await ReservationOps.GetRecursiveByIdAsync((int)id);
             if (reservation == null)
             {
                 return NotFound();
@@ -48,7 +46,7 @@ namespace MarkReservationSystem.Controllers
 
             return View(reservation);
         }
-        [Authorize(Roles = "Admin,Fan,Manager")]
+        [Authorize(Roles = "Fan,Manager")]
         // GET: Reservations/Create/Id
         public async Task<IActionResult> Create(int? Id)
         {
@@ -65,10 +63,78 @@ namespace MarkReservationSystem.Controllers
             int matchVenueId = match.MatchVenue.Id;
             int width = match.MatchVenue.Width;
             int height = match.MatchVenue.Height;
-            await SetViewBagItems(matchId, matchVenueId,width, height);    
+            await SetViewBagItems(matchId, matchVenueId, width, height);
             return View();
         }
-      
+
+
+
+        // POST: Reservations/Create
+        [Authorize(Roles = "Fan")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind("MatchId,MatchVenueId,SeatPosition")] Reservation reservation)
+        {
+            if (ModelState.IsValid)
+            {
+                DateTime now = DateTime.Now;
+                var reservedMatch = await MatchOps.GetRecursiveAsync((int)reservation.MatchId);
+                DateTime matchDate = reservedMatch.Date;
+                DateTime nowPlus3Days = now.AddDays(3);
+                //Console.WriteLine("nowPlus3Days: " + nowPlus3Days.ToString("yyyy-MM-dd"));
+                //Console.WriteLine("matchDate: " + matchDate.ToString("yyyy-MM-dd"));
+
+                if (nowPlus3Days > matchDate)
+                {
+                    return BadRequest("Reservation cannot be made because the match date is within the next 3 days.");
+                }
+                reservation.ReservationDate = now;
+                reservation.UserId = HttpContextUserManager.GetUserId();
+                ReservationOps.Create(reservation);
+                await ReservationOps.SaveChangesAsync();
+                return RedirectToAction(nameof(Details), new { Id = reservation.Id });
+            }
+
+            var match = await MatchOps.GetRecursiveAsync((int)reservation.MatchId);
+
+            int matchVenueId = match.MatchVenue.Id;
+            int width = match.MatchVenue.Width;
+            int height = match.MatchVenue.Height;
+            await SetViewBagItems((int)reservation.MatchId, matchVenueId, width, height);
+            return View(reservation);
+        }
+
+
+        [Authorize(Roles = "Fan")]
+        // GET: Reservations/Delete/5
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var reservation = await ReservationOps.GetRecursiveByIdAsync((int)id);
+            if (reservation == null)
+            {
+                return NotFound();
+            }
+
+            return View(reservation);
+            //return View();
+        }
+
+        // POST: Reservations/Delete/5
+        [Authorize(Roles = "Fan")]
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            ReservationOps.Delete(id);
+            await ReservationOps.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
         private async Task SetViewBagItems(int matchId, int matchVenueId, int width, int height)
         {
 
@@ -121,133 +187,5 @@ namespace MarkReservationSystem.Controllers
             ViewBag.matchId = matchId;
             ViewBag.matchVenueId = matchVenueId;
         }
-
-        // POST: Reservations/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [Authorize(Roles = "Fan,Admin")]
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("MatchId,MatchVenueId,SeatPosition")] Reservation reservation)
-        {
-            if (ModelState.IsValid)
-            {
-                DateTime now = DateTime.Now;
-                var reservedMatch = await MatchOps.GetRecursiveAsync((int)reservation.MatchId);
-                DateTime matchDate = reservedMatch.Date;
-                DateTime nowPlus3Days = now.AddDays(3);
-                //Console.WriteLine("nowPlus3Days: " + nowPlus3Days.ToString("yyyy-MM-dd"));
-                //Console.WriteLine("matchDate: " + matchDate.ToString("yyyy-MM-dd"));
-
-                if (nowPlus3Days > matchDate)
-                {
-                    return BadRequest("Reservation cannot be made because the match date is within the next 3 days.");
-                }
-                reservation.ReservationDate = now;
-                ReservationOps.Create(reservation);
-                await ReservationOps.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-
-            var match = await MatchOps.GetRecursiveAsync((int)reservation.MatchId);
-         
-            int matchVenueId = match.MatchVenue.Id;
-            int width = match.MatchVenue.Width;
-            int height = match.MatchVenue.Height;
-            await SetViewBagItems((int)reservation.MatchId, matchVenueId, width, height);
-            return View(reservation);
-        }
-
-        // GET: Reservations/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            //if (id == null)
-            //{
-            //    return NotFound();
-            //}
-
-            //var reservation = await _context.Reservation.FindAsync(id);
-            //if (reservation == null)
-            //{
-            //    return NotFound();
-            //}
-            //ViewData["MatchId"] = new SelectList(_context.Matches, "Id", "Id", reservation.MatchId);
-            //ViewData["MatchVenueId"] = new SelectList(_context.MatchVenues, "Id", "Id", reservation.MatchVenueId);
-            //ViewData["ApplicationUserId"] = new SelectList(_context.Set<ApplicationUser>(), "Id", "Id", reservation.ApplicationUserId);
-            //return View(reservation);
-            return View();
-        }
-
-        // POST: Reservations/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,ApplicationUserId,MatchId,MatchVenueId,SeatPosition,ReservationDate")] Reservation reservation)
-        {
-            //if (id != reservation.Id)
-            //{
-            //    return NotFound();
-            //}
-
-            //if (ModelState.IsValid)
-            //{
-            //    try
-            //    {
-            //        _context.Update(reservation);
-            //        await _context.SaveChangesAsync();
-            //    }
-            //    catch (DbUpdateConcurrencyException)
-            //    {
-            //        if (!ReservationExists(reservation.Id))
-            //        {
-            //            return NotFound();
-            //        }
-            //        else
-            //        {
-            //            throw;
-            //        }
-            //    }
-            //    return RedirectToAction(nameof(Index));
-            //}
-            //ViewData["MatchId"] = new SelectList(_context.Matches, "Id", "Id", reservation.MatchId);
-            //ViewData["MatchVenueId"] = new SelectList(_context.MatchVenues, "Id", "Id", reservation.MatchVenueId);
-            //ViewData["ApplicationUserId"] = new SelectList(_context.Set<ApplicationUser>(), "Id", "Id", reservation.ApplicationUserId);
-            return View(reservation);
-        }
-        [Authorize(Roles = "Fan,Admin")]
-        // GET: Reservations/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var reservation = await ReservationOps.GetbyIdAsync((int)id);
-            if (reservation == null)
-            {
-                return NotFound();
-            }
-
-            return View(reservation);
-            //return View();
-        }
-
-        // POST: Reservations/Delete/5
-        [Authorize(Roles = "Fan,Admin")]
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            ReservationOps.Delete(id);
-            await ReservationOps.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-        //private bool ReservationExists(int id)
-        //{
-        //  return (_context.Reservation?.Any(e => e.Id == id)).GetValueOrDefault();
-        //}
     }
 }

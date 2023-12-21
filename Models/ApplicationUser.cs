@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 
-namespace MarkReservationSystem.Models
+namespace MatchReservationSystem.Models
 {
     public class ApplicationUser : IdentityUser
     {
@@ -13,7 +13,7 @@ namespace MarkReservationSystem.Models
         [Required, MaxLength(100)]
         public string LastName { get; set;}
 
-
+        
         [Required]
         public DateTime Birthdate { get; set; }
 

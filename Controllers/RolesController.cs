@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace MarkReservationSystem.Controllers
+namespace MatchReservationSystem.Controllers
 {
     [Authorize(Roles = "Manager")]
     public class RolesController : Controller

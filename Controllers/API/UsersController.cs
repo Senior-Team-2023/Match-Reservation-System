@@ -1,9 +1,9 @@
-﻿using MarkReservationSystem.Models;
+﻿using MatchReservationSystem.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-namespace MarkReservationSystem.Controllers.API
+namespace MatchReservationSystem.Controllers.API
 {
     [Route("api/[controller]")]
     [ApiController]

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 
-namespace MarkReservationSystem.Hubs
+namespace MatchReservationSystem.Hubs
 {
     public class ReservationHub : Hub
     {

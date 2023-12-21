@@ -1,4 +1,4 @@
-﻿namespace MarkReservationSystem.ViewModels
+﻿namespace MatchReservationSystem.ViewModels
 {
     public class UserRolesViewModel
     {

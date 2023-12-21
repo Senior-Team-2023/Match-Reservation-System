@@ -1,9 +1,9 @@
-﻿using MarkReservationSystem.Models;
+﻿using MatchReservationSystem.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace MarkReservationSystem.DbContexts
+namespace MatchReservationSystem.DbContexts
 {
     public class UserIdentityDbContext : IdentityDbContext<ApplicationUser>
     {

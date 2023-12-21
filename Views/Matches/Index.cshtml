@@ -7,9 +7,6 @@
 
 <h1>Matches</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 <table class="table">
     <thead>
         <tr>
@@ -37,7 +34,12 @@
             <th>
                 @Html.DisplayNameFor(model => model.LineManTwo)
             </th>
-            <th></th>
+            <th>
+                @if (User.IsInRole("Manager"))
+                {
+                    <a asp-action="Create">Create New Match</a>
+                }
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -73,13 +75,20 @@
                     <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
                     <a asp-action="Delete" asp-route-id="@item.Id">Delete</a> |
                     @* <a asp-action="Create" asp-route-id="@item.Id" asp-controller="Reservations">Reserve</a> *@
-                    @if (DateTime.Now.AddDays(3) < item.Date)
+                    @if (User.IsInRole("Fan"))
                     {
-                        <a asp-action="Create" asp-route-id="@item.Id" asp-controller="Reservations">Reserve</a>
+                        @if (DateTime.Now.AddDays(3) < item.Date)
+                        {
+                            <a asp-action="Create" asp-route-id="@item.Id" asp-controller="Reservations">Reserve</a>
+                        }
+                        else
+                        {
+                            <span>Reserve</span>
+                        }
                     }
-                    else
+                    else if (User.IsInRole("Manager"))
                     {
-                        <span>Reserve</span>
+                        <a asp-action="Create" asp-route-id="@item.Id" asp-controller="Reservations">View Reservations</a>
                     }
 
 

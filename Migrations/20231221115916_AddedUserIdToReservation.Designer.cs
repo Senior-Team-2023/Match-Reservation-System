@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MatchReservationSystem.Migrations
 {
     [DbContext(typeof(GlobalDbContext))]
-    [Migration("20231126194715_AdditionalStadiumInfo")]
-    partial class AdditionalStadiumInfo
+    [Migration("20231221115916_AddedUserIdToReservation")]
+    partial class AddedUserIdToReservation
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,81 @@ namespace MatchReservationSystem.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("MatchReservationSystem.Models.ApplicationUser", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Address")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Birthdate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("City")
+                        .HasMaxLength(100)
+                        .HasColumnType("int");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("Gender")
+                        .HasColumnType("int");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("UserName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ApplicationUser");
+                });
 
             modelBuilder.Entity("MatchReservationSystem.Models.Match", b =>
                 {
@@ -82,14 +157,14 @@ namespace MatchReservationSystem.Migrations
                     b.Property<int>("City")
                         .HasColumnType("int");
 
+                    b.Property<int>("Height")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("NumberOfSeats")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ShapeInMeterSquare")
+                    b.Property<int>("Width")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -115,6 +190,40 @@ namespace MatchReservationSystem.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Referees");
+                });
+
+            modelBuilder.Entity("MatchReservationSystem.Models.Reservation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("MatchId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("MatchVenueId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("ReservationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("SeatPosition")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MatchId");
+
+                    b.HasIndex("MatchVenueId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Reservation");
                 });
 
             modelBuilder.Entity("MatchReservationSystem.Models.Team", b =>
@@ -171,6 +280,27 @@ namespace MatchReservationSystem.Migrations
                     b.Navigation("MainReferee");
 
                     b.Navigation("MatchVenue");
+                });
+
+            modelBuilder.Entity("MatchReservationSystem.Models.Reservation", b =>
+                {
+                    b.HasOne("MatchReservationSystem.Models.Match", "Match")
+                        .WithMany()
+                        .HasForeignKey("MatchId");
+
+                    b.HasOne("MatchReservationSystem.Models.MatchVenue", "MatchVenue")
+                        .WithMany()
+                        .HasForeignKey("MatchVenueId");
+
+                    b.HasOne("MatchReservationSystem.Models.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Match");
+
+                    b.Navigation("MatchVenue");
+
+                    b.Navigation("User");
                 });
 #pragma warning restore 612, 618
         }

@@ -6,9 +6,7 @@
 
 <h1>Stadiums</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+
 <table class="table">
     <thead>
         <tr>
@@ -27,7 +25,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.Width)
             </th>
-            <th></th>
+            <th>
+                    <a asp-action="Create">Create New Stadium</a>
+            </th>
         </tr>
     </thead>
     <tbody>

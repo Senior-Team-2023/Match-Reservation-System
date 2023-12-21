@@ -1,20 +1,23 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - MarkReservationSystem</title>
+    <title>@ViewData["Title"] - MatchReservationSystem</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/reservation.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/MarkReservationSystem.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/MatchReservationSystem.styles.css" asp-append-version="true" />
 </head>
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
                 <a class="navbar-brand" asp-area="" asp-controller="Matches" asp-action="Index">
-                    <img src="~/images/epl.png" alt="MarkReservationSystem" style="height: 30px; width: 30px;" />
+                    <img src="~/images/epl.png" alt="MatchReservationSystem" style="height: 30px; width: 30px;" />
                     EPL
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
@@ -28,7 +31,15 @@
                         </li>
                         @if (User.IsInRole("Manager"))
                         {
-                            <a class="nav-link text-dark" asp-controller="MatchVenue" asp-action="Index">Stadiums</a>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="MatchVenue" asp-action="Index">Stadiums</a>
+                            </li>
+                        }
+                        @if (SignInManager.IsSignedIn(User))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Reservations" asp-action="Index">My Reservations</a>
+                            </li>
                         }
                     </ul>
                     <partial name="_LoginPartial" />
@@ -44,7 +55,7 @@
 
     @*<footer class="border-top footer text-muted">
     <div class="container">
-    &copy; 2023 - MarkReservationSystem - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    &copy; 2023 - MatchReservationSystem - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
     </div>
     </footer>*@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

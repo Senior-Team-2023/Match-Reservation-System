@@ -1,11 +1,11 @@
-﻿using MarkReservationSystem.Models;
-using MarkReservationSystem.ViewModels;
+﻿using MatchReservationSystem.Models;
+using MatchReservationSystem.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace MarkReservationSystem.Controllers
+namespace MatchReservationSystem.Controllers
 {
     [Authorize(Roles = "Admin")]
     public class UsersController : Controller

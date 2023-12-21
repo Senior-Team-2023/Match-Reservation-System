@@ -1,20 +1,16 @@
-﻿@model IEnumerable<MarkReservationSystem.Models.Reservation>
+﻿@model IEnumerable<MatchReservationSystem.Models.Reservation>
 
 @{
     ViewData["Title"] = "Reservations";
 }
 
 <h1>Index</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 <table class="table">
     <thead>
         <tr>
-            <th@* >
-                @Html.DisplayNameFor(model => model.User)
-            </th> *@
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
             <th>
                 @Html.DisplayNameFor(model => model.Match)
             </th>
@@ -27,40 +23,42 @@
             <th>
                 @Html.DisplayNameFor(model => model.ReservationDate)
             </th>
-            <th></th>
+            <th>
+            </th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            @* <td>
-                @Html.DisplayFor(modelItem => item.User.Id)
-            </td> *@
-            <td>
-                @Html.DisplayFor(modelItem => item.Match.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.MatchVenue.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SeatPosition)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ReservationDate)
-            </td>
-            <td>
-                @* <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> | *@
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                @if (DateTime.Now.AddDays(3) < item.Match.Date)
-                {    
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                }
-                else
-				{
-					<span>Delete</span>
-				}
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Match.HomeTeam.Name) vs @Html.DisplayFor(modelItem => item.Match.AwayTeam.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MatchVenue.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SeatPosition)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ReservationDate)
+                </td>
+                <td>
+                    @* <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> | *@
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    @if (DateTime.Now.AddDays(3) < item.Match.Date)
+                    {
+                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    }
+                    else
+                    {
+                        <span>Delete</span>
+                    }
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
