@@ -3,9 +3,14 @@
 @{
     ViewData["Title"] = "Create";
 }
-
-<h1>Create</h1>
-
+@if (User.IsInRole("Fan"))
+{
+    <h1>Create</h1>
+}
+else
+{
+    <h1>View</h1>
+}
 <h4>Reservation</h4>
 <hr />
 <div class="row">

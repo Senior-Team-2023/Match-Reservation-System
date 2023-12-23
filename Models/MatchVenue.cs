@@ -6,6 +6,8 @@ namespace MatchReservationSystem.Models
     public class MatchVenue
     {
         public int Id { get; set; }
+
+        [Display(Name = "Stadium Name")]
         public string Name { get; set; }
         public City City { get; set; }
 
