@@ -56,7 +56,7 @@ namespace MatchReservationSystem.Areas.Identity.Pages.Account.Manage
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
-            [Display(Name = "")]
+            [Display(Name = "Address")]
             public string Address { get; set; }
 
             [Phone]
@@ -109,7 +109,7 @@ namespace MatchReservationSystem.Areas.Identity.Pages.Account.Manage
 
             if (Input.Address != address)
             {
-                user.Address = address;
+                user.Address = Input.Address;
                 await _userManager.UpdateAsync(user);
             }
             if (Input.PhoneNumber != phoneNumber)
