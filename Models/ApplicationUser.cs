@@ -28,5 +28,8 @@ namespace MatchReservationSystem.Models
 
         [Required, MaxLength(100)]
         public City City { get; set; }
+
+
+        public bool IsAccepted { get; set; }
     }
 }

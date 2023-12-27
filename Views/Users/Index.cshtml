@@ -42,10 +42,27 @@
                 <td>
                     @string.Join(", ", item.Roles)
                 </td>
-                <td>
-                    <a class="btn btn-primary" asp-action="ManageRoles" asp-route-userId="@item.Id">Manage</a>
-                    <a href="javascript:;" class="btn btn-danger js-delete" data-id="@item.Id">Delete</a>
-                </td>
+                @if (item.IsAccepted)
+                {
+                    <td>
+                        <a class="btn btn-primary" asp-action="ManageRoles" asp-route-userId="@item.Id">Manage</a>
+                        <a href="javascript:;" class="btn btn-danger js-delete" data-id="@item.Id">Delete</a>
+                    </td>
+                }
+                else
+                {
+                    <td>
+                        <a class="btn btn-success" asp-action="AcceptUser" asp-route-userId="@item.Id">Accept</a>
+                        <a href="javascript:;" class="btn btn-danger js-delete" data-id="@item.Id">Delete</a>
+                    </td>
+                   @* <td>
+                        <form method="post" asp-controller="Users" asp-action="AcceptUser">
+                            <input type="hidden" name="Id" value="@item.Id" />
+                            <button type="submit" class="btn btn-primary">Accept</button>
+                        </form>
+                        <a href="javascript:;" class="btn btn-danger js-delete" data-id="@item.Id">Reject</a>
+                    </td>*@
+                }
             </tr>
         }
     </tbody>

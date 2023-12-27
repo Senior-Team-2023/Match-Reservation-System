@@ -26,7 +26,7 @@ namespace MatchReservationSystem.Controllers
         // GET: Matches
         public async Task<IActionResult> Index()
         {
-            return View(await MatchOps.GetAllRecursiveAsync());
+            return View(await MatchOps.GetAllRecursiveSortedByDateAsync());
         }
 
         // GET: Matches/Details/5
@@ -55,9 +55,14 @@ namespace MatchReservationSystem.Controllers
         {
             if (ModelState.IsValid)
             {
-                MatchOps.Create(match);
-                await MatchOps.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                string validMatchMsg = await ValidateMatch(match);
+                if (validMatchMsg == "")
+                {
+                    MatchOps.Create(match);
+                    await MatchOps.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                ViewBag.ErrMsg = validMatchMsg;
             }
             await SetViewBagItems();
             return View(match);
@@ -89,23 +94,28 @@ namespace MatchReservationSystem.Controllers
 
             if (ModelState.IsValid)
             {
-                try
+                string validMatchMsg = await ValidateMatch(match);
+                if (validMatchMsg == "")
                 {
-                    MatchOps.Edit(match);
-                    await MatchOps.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!MatchOps.Exists(match.Id))
+                    try
                     {
-                        return NotFound();
+                        MatchOps.Edit(match);
+                        await MatchOps.SaveChangesAsync();
                     }
-                    else
+                    catch (DbUpdateConcurrencyException)
                     {
-                        throw;
+                        if (!MatchOps.Exists(match.Id))
+                        {
+                            return NotFound();
+                        }
+                        else
+                        {
+                            throw;
+                        }
                     }
+                    return RedirectToAction(nameof(Index));
                 }
-                return RedirectToAction(nameof(Index));
+                ViewBag.ErrMsg = validMatchMsg;
             }
             await SetViewBagItems();
             return View(match);
@@ -157,7 +167,34 @@ namespace MatchReservationSystem.Controllers
             // Return the options as a JSON result
             return Json(new SelectList(referees, "Id", "Name"));
         }
-        private async Task SetViewBagItems() 
+        private async Task<string> ValidateMatch(Match newMatch)
+        {
+            if (DateTime.Now.AddDays(3) < newMatch.Date)
+                return "Match creating must be before the match day with at least 3 days";
+
+            var allMatches = await MatchOps.GetAllExceptMe(newMatch.Id);
+            foreach (Match match in allMatches)
+            {
+
+                if (newMatch.Date.Year == match.Date.Year && newMatch.Date.Month == match.Date.Month && newMatch.Date.Day == match.Date.Day)
+                {
+                    if (newMatch.MatchVenueId == match.MatchVenueId)
+                        return "Stadium already in use in this day";
+
+
+                    if (newMatch.HomeTeamId == match.AwayTeamId || newMatch.AwayTeamId == match.HomeTeamId || newMatch.HomeTeamId == match.HomeTeamId || newMatch.AwayTeamId == match.AwayTeamId)
+                        return "One of the teams already has a match in this day";
+
+                    if (newMatch.MainRefereeId == match.MainRefereeId)
+                        return "Main Referee aready has a match this day";
+
+                    if (newMatch.LineManOneId == match.LineManOneId || newMatch.LineManTwoId == match.LineManTwoId || newMatch.LineManOneId == match.LineManTwoId || newMatch.LineManTwoId == match.LineManOneId)
+                        return "One of the 2 linemen already has a match in this day";
+                }
+            }
+            return "";
+        }
+        private async Task SetViewBagItems()
         {
             ViewBag.HomeTeams = new SelectList(await TeamOps.GetAllAsync(), "Id", "Name");
             ViewBag.AwayTeams = new SelectList(await TeamOps.GetAllAsync(), "Id", "Name");

@@ -114,6 +114,13 @@ namespace MatchReservationSystem.Areas.Identity.Pages.Account
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
                 string username = Input.Username;
                 string password = Input.Password;
+                var user = await _signInManager.UserManager.FindByNameAsync(username);
+                if (user !=null && !user.IsAccepted)
+                {
+                    //_logger.LogInformation("User logged in.");
+                    ModelState.AddModelError(string.Empty, "Invalid login attempt, User not accepted yet");
+                    return Page();
+                }
                 var result = await _signInManager.PasswordSignInAsync(username, password, Input.RememberMe, lockoutOnFailure: true);
                 if (result.Succeeded)
                 {

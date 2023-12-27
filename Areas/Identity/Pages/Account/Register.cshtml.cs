@@ -157,7 +157,8 @@ namespace MatchReservationSystem.Areas.Identity.Pages.Account
                 user.City = Input.City;
                 user.Address = Input.Address;
                 user.Email = Input.Email;
-                
+                user.IsAccepted = false;
+
 
 
                 await _userStore.SetUserNameAsync(user, Input.Username, CancellationToken.None);

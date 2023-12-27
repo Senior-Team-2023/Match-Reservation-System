@@ -76,6 +76,7 @@
                     @* <a asp-action="Create" asp-route-id="@item.Id" asp-controller="Reservations">Reserve</a> *@
                     @if (User.IsInRole("Fan"))
                     {
+                        <span>|</span>
                         @if (DateTime.Now.AddDays(3) < item.Date)
                         {
                             <a asp-action="Create" asp-route-id="@item.Id" asp-controller="Reservations">Reserve</a>

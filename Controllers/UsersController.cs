@@ -34,7 +34,8 @@ namespace MatchReservationSystem.Controllers
                     Id = user.Id,
                     UserName = user.UserName,
                     Email = user.Email,
-                    Roles = roles.ToList()
+                    Roles = roles.ToList(),
+                    IsAccepted = user.IsAccepted
                 };
 
                 userViewModels.Add(userViewModel);
@@ -91,8 +92,21 @@ namespace MatchReservationSystem.Controllers
                 else if (!userRoles.Contains(role.RoleName) && role.IsSelected)
                 {
                     await _userManager.AddToRoleAsync(user, role.RoleName);
-                }   
+                }
             }
+            return RedirectToAction(nameof(Index));
+        }
+
+        
+        public async Task<IActionResult> AcceptUser(string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            user.IsAccepted = true;
+            await _userManager.UpdateAsync(user);
             return RedirectToAction(nameof(Index));
         }
     }
